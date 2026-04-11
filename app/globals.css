@@ -81,6 +81,43 @@
 }
 
 :root {
+  color-scheme: light;
+  --background: #FDF8F6;
+  --foreground: #2D2320;
+  --card: #FFFFFF;
+  --card-foreground: #2D2320;
+  --popover: #FFFFFF;
+  --popover-foreground: #2D2320;
+  --primary: #E8A598;
+  --primary-foreground: #FFFFFF;
+  --secondary: #C9B8D8;
+  --secondary-foreground: #2D2320;
+  --muted: #F7F2EF;
+  --muted-foreground: #8C7B75;
+  --accent: #F2C4CE;
+  --accent-foreground: #2D2320;
+  --destructive: #D97B7B;
+  --border: #ECDDD7;
+  --input: #ECDDD7;
+  --ring: #E8A598;
+  --chart-1: #E8A598;
+  --chart-2: #C9B8D8;
+  --chart-3: #7BAE8A;
+  --chart-4: #E8C07A;
+  --chart-5: #F2C4CE;
+  --radius: 0.75rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #2D2320;
+  --sidebar-primary: #E8A598;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FDF8F6;
+  --sidebar-accent-foreground: #2D2320;
+  --sidebar-border: #ECDDD7;
+  --sidebar-ring: #E8A598;
+}
+
+.dark {
+  color-scheme: light;
   --background: #FDF8F6;
   --foreground: #2D2320;
   --card: #FFFFFF;
@@ -119,14 +156,22 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-flow-bg text-flow-text antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
   html {
     @apply font-sans scroll-smooth;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
 }
@@ -135,29 +180,38 @@
   .flow-transition {
     transition: all 280ms cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .shimmer {
-    background: linear-gradient(
-      90deg,
-      rgba(232, 165, 152, 0.1) 0%,
-      rgba(232, 165, 152, 0.2) 50%,
-      rgba(232, 165, 152, 0.1) 100%
-    );
+    background: linear-gradient(90deg,
+        rgba(232, 165, 152, 0.1) 0%,
+        rgba(232, 165, 152, 0.2) 50%,
+        rgba(232, 165, 152, 0.1) 100%);
     background-size: 200% 100%;
     animation: shimmer 2s ease-in-out infinite;
   }
+
   @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
   }
+
   .phase-gradient-menstrual {
     background: linear-gradient(135deg, #D4537E 0%, #E8A598 100%);
   }
+
   .phase-gradient-follicular {
     background: linear-gradient(135deg, #7BAE8A 0%, #A8D4B4 100%);
   }
+
   .phase-gradient-ovulatory {
     background: linear-gradient(135deg, #E8C07A 0%, #F2D4A0 100%);
   }
+
   .phase-gradient-luteal {
     background: linear-gradient(135deg, #C9B8D8 0%, #E0D5EB 100%);
   }
