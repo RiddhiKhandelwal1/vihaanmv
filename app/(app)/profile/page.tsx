@@ -7,6 +7,8 @@ import { useUserStore } from '@/store/userStore';
 import { useCycleStore } from '@/store/cycleStore';
 import { useLogStore } from '@/store/logStore';
 import { useRouter } from 'next/navigation';
+import { generateDoctorReport } from '@/lib/generateReport';
+import { generateDemoData } from '@/lib/demoData';
 import {
     User,
     Settings,
@@ -19,11 +21,18 @@ import {
     Trash2,
     Crown,
     ChevronRight,
+    FileText,
+    Download,
+    Database,
 } from 'lucide-react';
+import { useState } from 'react';
 
 export default function ProfilePage() {
     const { profile, reset: resetUser, setAuthenticated } = useUserStore();
+    const cycles = useCycleStore((s) => s.cycles);
+    const logs = useLogStore((s) => s.logs);
     const router = useRouter();
+    const [demoLoaded, setDemoLoaded] = useState(false);
 
     const handleLogout = () => {
         setAuthenticated(false);
@@ -31,13 +40,41 @@ export default function ProfilePage() {
     };
 
     const handleDeleteData = () => {
-        if (confirm('Are you sure you want to delete all your data? This cannot be undone.')) {
+        if (
+            confirm(
+                'Are you sure you want to delete all your data? This cannot be undone.'
+            )
+        ) {
             resetUser();
             localStorage.removeItem('flow-cycle-store');
             localStorage.removeItem('flow-log-store');
             localStorage.removeItem('flow-user-store');
             router.push('/welcome');
         }
+    };
+
+    const handleExportReport = () => {
+        generateDoctorReport({
+            userName: profile.name || 'User',
+            cycles,
+            logs,
+            profile: {
+                averageCycleLength: profile.averageCycleLength,
+                averagePeriodLength: profile.averagePeriodLength,
+                hasPcos: profile.hasPcos,
+                hasEndometriosis: profile.hasEndometriosis,
+                isIrregular: profile.isIrregular,
+                dateOfBirth: profile.dateOfBirth,
+            },
+        });
+    };
+
+    const handleLoadDemo = () => {
+        const { cycles, logs } = generateDemoData();
+        useCycleStore.setState({ cycles });
+        useLogStore.setState({ logs });
+        setDemoLoaded(true);
+        setTimeout(() => setDemoLoaded(false), 3000);
     };
 
     const settingsGroups = [
@@ -53,7 +90,10 @@ export default function ProfilePage() {
                 {
                     icon: Crown,
                     label: 'Subscription',
-                    description: profile.subscriptionTier === 'free' ? 'Free plan' : 'Pro plan',
+                    description:
+                        profile.subscriptionTier === 'free'
+                            ? 'Free plan'
+                            : 'Pro plan',
                     color: '#E8C07A',
                 },
             ],
@@ -81,7 +121,8 @@ export default function ProfilePage() {
                 {
                     icon: Shield,
                     label: 'Privacy & Security',
-                    description: 'Data encryption, privacy controls',
+                    description:
+                        'Local-only storage · Zero third-party trackers · GDPR compliant',
                     color: '#6B8CAE',
                 },
                 {
@@ -109,7 +150,9 @@ export default function ProfilePage() {
                     {profile.name || 'Your Profile'}
                 </h2>
                 <p className="text-sm text-flow-muted mt-0.5">
-                    {profile.subscriptionTier === 'free' ? '✨ Free plan' : '👑 Pro plan'}
+                    {profile.subscriptionTier === 'free'
+                        ? '✨ Free plan'
+                        : '👑 Pro plan'}
                 </p>
             </motion.div>
 
@@ -124,9 +167,12 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-3">
                             <Crown className="w-8 h-8 flex-shrink-0" />
                             <div className="flex-1">
-                                <h3 className="font-semibold text-sm">Upgrade to Pro</h3>
+                                <h3 className="font-semibold text-sm">
+                                    Upgrade to Pro
+                                </h3>
                                 <p className="text-xs text-white/80 mt-0.5">
-                                    Unlock AI companion, advanced insights, and unlimited history
+                                    Unlock AI companion, advanced insights, and
+                                    unlimited history
                                 </p>
                             </div>
                             <Button
@@ -162,9 +208,14 @@ export default function ProfilePage() {
                                 >
                                     <div
                                         className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                                        style={{ backgroundColor: `${item.color}20` }}
+                                        style={{
+                                            backgroundColor: `${item.color}20`,
+                                        }}
                                     >
-                                        <Icon className="w-4.5 h-4.5" style={{ color: item.color }} />
+                                        <Icon
+                                            className="w-4.5 h-4.5"
+                                            style={{ color: item.color }}
+                                        />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-medium text-flow-text">
@@ -181,6 +232,38 @@ export default function ProfilePage() {
                     </Card>
                 </motion.div>
             ))}
+
+            {/* Health Export */}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+            >
+                <p className="text-xs text-flow-muted uppercase tracking-wide font-medium mb-2 px-1">
+                    Health Export
+                </p>
+                <Card className="rounded-2xl border-[#ECDDD7]/50 bg-white overflow-hidden">
+                    <button
+                        onClick={handleExportReport}
+                        disabled={cycles.length === 0 && logs.length === 0}
+                        className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-flow-surface2/50 flow-transition text-left disabled:opacity-40"
+                    >
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#6B8CAE]/10">
+                            <FileText className="w-4 h-4 text-[#6B8CAE]" />
+                        </div>
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-flow-text">
+                                Doctor Report PDF
+                            </p>
+                            <p className="text-xs text-flow-muted">
+                                Download your cycle data for your next
+                                appointment
+                            </p>
+                        </div>
+                        <Download className="w-4 h-4 text-flow-muted" />
+                    </button>
+                </Card>
+            </motion.div>
 
             {/* Danger zone */}
             <motion.div
@@ -205,9 +288,20 @@ export default function ProfilePage() {
                     <Trash2 className="w-4 h-4" />
                     Delete all my data
                 </Button>
+
+                {/* Demo Data Loader */}
+                <button
+                    onClick={handleLoadDemo}
+                    className="w-full text-center text-xs text-flow-muted/50 hover:text-flow-muted py-2 flow-transition flex items-center justify-center gap-1.5"
+                >
+                    <Database className="w-3 h-3" />
+                    {demoLoaded ? '✓ Demo data loaded!' : 'Load demo data (hackathon mode)'}
+                </button>
+
                 <p className="text-[10px] text-flow-muted/60 text-center px-4">
-                    Your data is stored locally on this device and is never shared with
-                    third parties. Flow is built with privacy at its core. ❤️
+                    Your data is stored locally on this device and is never
+                    shared with third parties. Vihaan is built with privacy at
+                    its core. ❤️
                 </p>
             </motion.div>
         </div>

@@ -9,9 +9,11 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { useCycleStore } from '@/store/cycleStore';
 import { format, subDays } from 'date-fns';
-import { ArrowRight, ArrowLeft, Heart, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Heart, Sparkles, Check } from 'lucide-react';
 import { GradientText } from '@/components/ui/GradientText';
 import { CycleEngine } from '@/lib/cycleEngine';
+import { generateDemoData } from '@/lib/demoData';
+import { useLogStore } from '@/store/logStore';
 
 const GOALS = [
     'Track my period',
@@ -41,6 +43,7 @@ export default function OnboardingPage() {
     const [periodLength, setPeriodLength] = useState(5);
     const [goals, setGoals] = useState<string[]>([]);
     const [conditions, setConditions] = useState<string[]>([]);
+    const [loadDemoData, setLoadDemoData] = useState(true);
 
     const totalSteps = 6;
 
@@ -76,6 +79,17 @@ export default function OnboardingPage() {
                 cycleLength,
                 periodLength
             );
+        }
+
+        // Seed demo data if opted in
+        if (loadDemoData) {
+            const { cycles, logs } = generateDemoData({
+                cycleLengths: [cycleLength - 1, cycleLength + 1, cycleLength, cycleLength - 1, cycleLength + 1, cycleLength],
+                periodLengths: [periodLength, periodLength - 1, periodLength, periodLength + 1, periodLength, periodLength - 1].map(p => Math.max(3, p)),
+                dayIntoCurrent: 8,
+            });
+            useCycleStore.setState({ cycles });
+            useLogStore.setState({ logs });
         }
 
         completeOnboarding();
@@ -225,8 +239,8 @@ export default function OnboardingPage() {
                         key={goal}
                         onClick={() => toggleGoal(goal)}
                         className={`px-4 py-2.5 rounded-2xl text-sm font-medium flow-transition ${goals.includes(goal)
-                                ? 'bg-flow-primary text-white shadow-card'
-                                : 'bg-white text-flow-text hover:bg-flow-surface2 border border-[#ECDDD7]'
+                            ? 'bg-flow-primary text-white shadow-card'
+                            : 'bg-white text-flow-text hover:bg-flow-surface2 border border-[#ECDDD7]'
                             }`}
                     >
                         {goal}
@@ -264,6 +278,24 @@ export default function OnboardingPage() {
                     </p>
                 </motion.div>
             )}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+            >
+                <button
+                    onClick={() => setLoadDemoData(!loadDemoData)}
+                    className="flex items-center gap-2.5 mt-2 px-4 py-2.5 rounded-xl bg-white border border-[#ECDDD7] hover:bg-flow-surface2 flow-transition"
+                >
+                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flow-transition ${loadDemoData ? 'bg-flow-primary border-flow-primary' : 'border-[#ECDDD7]'
+                        }`}>
+                        {loadDemoData && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                    <span className="text-xs text-flow-text">
+                        Load 6 months of demo data for rich Insights
+                    </span>
+                </button>
+            </motion.div>
         </motion.div>,
     ];
 

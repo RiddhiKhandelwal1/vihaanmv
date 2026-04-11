@@ -22,6 +22,8 @@ import {
     CalendarDays,
     Clock,
     TrendingUp,
+    Shield,
+    Lock,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useUIStore } from '@/store/uiStore';
@@ -109,8 +111,16 @@ export default function HomePage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
             >
-                <Card
-                    className={`relative overflow-hidden p-6 sm:p-8 rounded-3xl border-0 text-white phase-gradient-${prediction.currentPhase}`}
+                <div
+                    className="relative overflow-hidden p-6 sm:p-8 rounded-3xl text-white shadow-card"
+                    style={{
+                        background: {
+                            menstrual: 'linear-gradient(135deg, #D4537E 0%, #E8A598 100%)',
+                            follicular: 'linear-gradient(135deg, #7BAE8A 0%, #A8D4B4 100%)',
+                            ovulatory: 'linear-gradient(135deg, #E8C07A 0%, #F2D4A0 100%)',
+                            luteal: 'linear-gradient(135deg, #C9B8D8 0%, #E0D5EB 100%)',
+                        }[prediction.currentPhase] || 'linear-gradient(135deg, #E8A598 0%, #D4537E 100%)',
+                    }}
                 >
                     <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-10 translate-x-10" />
                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-10 -translate-x-10" />
@@ -145,7 +155,7 @@ export default function HomePage() {
                             </span>
                         </div>
                     </div>
-                </Card>
+                </div>
             </motion.div>
 
             {/* Quick Log Bar */}
@@ -289,8 +299,8 @@ export default function HomePage() {
                                 <div
                                     key={day.dateStr}
                                     className={`flex flex-col items-center py-2 rounded-xl text-center flow-transition ${day.isToday
-                                            ? 'bg-flow-primary/10 ring-1 ring-flow-primary/30'
-                                            : ''
+                                        ? 'bg-flow-primary/10 ring-1 ring-flow-primary/30'
+                                        : ''
                                         }`}
                                 >
                                     <span className="text-[9px] text-flow-muted uppercase">
@@ -322,6 +332,27 @@ export default function HomePage() {
                     </Card>
                 </motion.div>
             </div>
+
+            {/* Privacy Trust Badge */}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.8 }}
+            >
+                <Card className="p-4 rounded-2xl border-[#ECDDD7]/50 bg-white flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#6B8CAE]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Shield className="w-4 h-4 text-[#6B8CAE]" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-flow-text">Your data never leaves your device</p>
+                        <p className="text-xs text-flow-muted mt-0.5 leading-relaxed">
+                            Vihaan stores everything locally. No ads. No data selling. No third-party trackers.
+                            Unlike Flo, Clue, and others — <strong>we cannot share what we cannot see.</strong>
+                        </p>
+                    </div>
+                    <Lock className="w-4 h-4 text-[#6B8CAE] flex-shrink-0 mt-1" />
+                </Card>
+            </motion.div>
         </div>
     );
 }

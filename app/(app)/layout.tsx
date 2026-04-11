@@ -3,6 +3,7 @@
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { TopBar } from '@/components/layout/TopBar';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 
@@ -13,6 +14,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen bg-flow-bg">
             <Sidebar />
             <div className="lg:ml-[240px] min-h-screen pb-20 lg:pb-0">
+                <DemoBanner />
                 <TopBar />
                 <AnimatePresence mode="wait">
                     <motion.main
