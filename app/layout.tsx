@@ -23,11 +23,11 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Flow — Cycle & Health Tracker",
+  title: "Lunara — Cycle & Health Tracker",
   description:
     "Intelligent menstrual cycle tracking, mood logging, and AI health insights.",
   openGraph: {
-    title: "Flow",
+    title: "Lunara",
     description: "Track your cycle. Understand your body.",
   },
 };

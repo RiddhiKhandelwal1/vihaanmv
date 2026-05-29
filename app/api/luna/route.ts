@@ -47,33 +47,37 @@ export async function POST(req: NextRequest) {
             };
         }
 
-        // ─── Call Anthropic API ─────────────────────────────────────────
-        const apiKey = process.env.ANTHROPIC_API_KEY;
-        if (!apiKey) {
+        // ─── Call OpenAI API ────────────────────────────────────────────
+        const apiKey = process.env.OPENAI_API_KEY;
+        if (!apiKey || apiKey.trim().length < 10) {
             return NextResponse.json(
                 { response: "Luna is being set up — the API key hasn't been configured yet. 🌙" },
                 { status: 200 }
             );
         }
 
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        // Format messages for OpenAI (system prompt goes as first message)
+        const openaiMessages = [
+            { role: 'system', content: systemPrompt },
+            ...sanitizedMessages,
+        ];
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01',
+                'Authorization': `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
+                model: 'gpt-4o-mini',
                 max_tokens: 600,
-                system: systemPrompt,
-                messages: sanitizedMessages,
+                messages: openaiMessages,
             }),
         });
 
         if (!response.ok) {
             const error = await response.text();
-            console.error('[Luna API] Anthropic error:', response.status, error);
+            console.error('[Luna API] OpenAI error:', response.status, error);
             return NextResponse.json(
                 { response: "Luna is resting right now 🌙 Try again in a moment." },
                 { status: 200 } // Return 200 so the UI handles it gracefully
@@ -81,7 +85,7 @@ export async function POST(req: NextRequest) {
         }
 
         const data = await response.json();
-        const rawText = data.content?.[0]?.text ?? 'Sorry, I had trouble responding.';
+        const rawText = data.choices?.[0]?.message?.content ?? 'Sorry, I had trouble responding.';
 
         // ─── Output validation ──────────────────────────────────────────
         const validatedText = validateOutput(rawText);

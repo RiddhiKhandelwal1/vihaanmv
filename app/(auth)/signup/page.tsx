@@ -37,7 +37,7 @@ export default function SignupPage() {
                         <Heart className="w-5 h-5 text-white" />
                     </div>
                     <span className="font-serif text-2xl font-bold text-flow-text">
-                        Flow
+                        Lunara
                     </span>
                 </div>
 

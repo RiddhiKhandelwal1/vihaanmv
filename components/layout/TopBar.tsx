@@ -14,7 +14,7 @@ const pageNames: Record<string, string> = {
 
 export function TopBar() {
     const pathname = usePathname();
-    const pageName = pageNames[pathname] || 'Flow';
+    const pageName = pageNames[pathname] || 'Lunara';
     const today = format(new Date(), 'EEEE, d MMMM');
 
     return (

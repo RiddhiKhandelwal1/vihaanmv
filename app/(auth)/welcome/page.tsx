@@ -62,7 +62,7 @@ export default function WelcomePage() {
                 >
                     Welcome to{' '}
                     <GradientText from="#E8A598" to="#C9B8D8">
-                        Vihaan
+                        Lunara
                     </GradientText>
                 </motion.h1>
 

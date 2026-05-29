@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { PhaseChip } from '@/components/ui/PhaseChip';
@@ -36,6 +36,9 @@ function getGreeting(): string {
 }
 
 export default function HomePage() {
+    const [hasMounted, setHasMounted] = useState(false);
+    useEffect(() => setHasMounted(true), []);
+
     const { profile } = useUserStore();
     const cycles = useCycleStore((s) => s.cycles);
     const logs = useLogStore((s) => s.logs);
@@ -80,6 +83,9 @@ export default function HomePage() {
         }
         return days;
     }, [prediction, logs]);
+
+    // Prevent hydration mismatch — all hooks above, early return here
+    if (!hasMounted) return null;
 
     const quickLogButtons = [
         { label: 'Flow', icon: Droplets, step: 0, color: '#D4537E' },

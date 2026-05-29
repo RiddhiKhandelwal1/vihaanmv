@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useUserStore } from '@/store/userStore';
 import {
     Home,
     Calendar,
@@ -23,6 +24,8 @@ const navItems = [
 
 export function Sidebar() {
     const pathname = usePathname();
+    const { profile } = useUserStore();
+    const userName = profile.name || 'User';
 
     return (
         <aside className="hidden lg:flex flex-col w-[240px] h-screen bg-white border-r border-[#ECDDD7] fixed left-0 top-0 z-40">
@@ -33,7 +36,7 @@ export function Sidebar() {
                         <Heart className="w-4 h-4 text-white" strokeWidth={2.5} />
                     </div>
                     <span className="font-serif text-xl font-bold text-flow-text tracking-tight">
-                        Flow
+                        Lunara
                     </span>
                 </Link>
             </div>
@@ -48,8 +51,8 @@ export function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium flow-transition group ${isActive
-                                    ? 'text-flow-text bg-flow-surface2'
-                                    : 'text-flow-muted hover:text-flow-text hover:bg-flow-surface2/60'
+                                ? 'text-flow-text bg-flow-surface2'
+                                : 'text-flow-muted hover:text-flow-text hover:bg-flow-surface2/60'
                                 }`}
                         >
                             {isActive && (
@@ -70,12 +73,12 @@ export function Sidebar() {
             </nav>
 
             {/* AI Companion link */}
-            <div className="px-3 pb-3">
+            <div className="px-3 pb-1">
                 <Link
                     href="/companion"
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium flow-transition ${pathname === '/companion'
-                            ? 'text-flow-text bg-flow-surface2'
-                            : 'text-flow-muted hover:text-flow-text hover:bg-flow-surface2/60'
+                        ? 'text-flow-text bg-flow-surface2'
+                        : 'text-flow-muted hover:text-flow-text hover:bg-flow-surface2/60'
                         }`}
                 >
                     <Sparkles className="w-5 h-5 text-flow-warning" />
@@ -83,15 +86,29 @@ export function Sidebar() {
                 </Link>
             </div>
 
+            {/* My Companions link */}
+            <div className="px-3 pb-3">
+                <Link
+                    href="/partner"
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium flow-transition ${pathname === '/partner'
+                        ? 'text-flow-text bg-flow-surface2'
+                        : 'text-flow-muted hover:text-flow-text hover:bg-flow-surface2/60'
+                        }`}
+                >
+                    <Heart className="w-5 h-5 text-flow-accent" />
+                    <span>My Companions</span>
+                </Link>
+            </div>
+
             {/* Bottom user section */}
             <div className="p-4 border-t border-[#ECDDD7]">
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-flow-primary to-flow-secondary flex items-center justify-center text-white text-xs font-bold">
-                        P
+                        {userName.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-flow-text truncate">
-                            Priya
+                            {userName}
                         </p>
                         <p className="text-xs text-flow-muted">Free plan</p>
                     </div>
