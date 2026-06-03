@@ -76,24 +76,54 @@ export default function WelcomePage() {
                 </motion.p>
             </motion.div>
 
+            {/* Main Actions */}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="relative z-10 w-full max-w-sm flex flex-col gap-4 mb-8"
+            >
+                <Link href="/login" className="block w-full">
+                    <Button className="w-full h-14 bg-gradient-to-r from-flow-primary to-flow-accent hover:opacity-90 text-white rounded-2xl text-lg font-semibold shadow-float flex items-center justify-center">
+                        Log In
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                </Link>
+
+                <Link href="/signup" className="block w-full">
+                    <Button variant="outline" className="w-full h-14 bg-white border-2 border-flow-primary/20 text-flow-primary hover:bg-flow-primary/5 rounded-2xl text-lg font-semibold flex items-center justify-center">
+                        Create Account
+                        <Plus className="w-5 h-5 ml-2" />
+                    </Button>
+                </Link>
+            </motion.div>
+
+            {/* Divider */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="relative z-10 flex items-center gap-4 mb-6 w-full max-w-sm"
+            >
+                <div className="flex-1 h-px bg-[#ECDDD7]" />
+                <span className="text-xs text-flow-muted">or try a demo</span>
+                <div className="flex-1 h-px bg-[#ECDDD7]" />
+            </motion.div>
+
             {/* Demo Profile Grid */}
             <motion.div
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 1.0 }}
                 className="relative z-10 w-full max-w-3xl"
             >
-                <p className="text-xs text-flow-muted uppercase tracking-wide font-medium mb-3 px-1">
-                    <Sparkles className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
-                    Demo Profiles — click to explore
-                </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {DEMO_PROFILES.map((profile, index) => (
                         <motion.div
                             key={profile.id}
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.7 + index * 0.07 }}
+                            transition={{ delay: 1.1 + index * 0.07 }}
                         >
                             <Card
                                 onClick={() => handleSelectProfile(profile)}
@@ -149,45 +179,6 @@ export default function WelcomePage() {
                         </motion.div>
                     ))}
                 </div>
-            </motion.div>
-
-            {/* Divider */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.1 }}
-                className="relative z-10 flex items-center gap-4 my-8 w-full max-w-3xl"
-            >
-                <div className="flex-1 h-px bg-[#ECDDD7]" />
-                <span className="text-xs text-flow-muted">or</span>
-                <div className="flex-1 h-px bg-[#ECDDD7]" />
-            </motion.div>
-
-            {/* New User CTA */}
-            <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                className="relative z-10 w-full max-w-3xl"
-            >
-                <Link href="/onboarding" className="block">
-                    <Card className="p-4 rounded-2xl border-[#ECDDD7]/50 bg-white hover:shadow-float flow-transition cursor-pointer group">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-flow-primary/20 to-flow-accent/10 flex items-center justify-center flex-shrink-0 group-hover:from-flow-primary/30 flow-transition">
-                                <Plus className="w-5 h-5 text-flow-primary" />
-                            </div>
-                            <div className="flex-1">
-                                <p className="text-sm font-semibold text-flow-text group-hover:text-flow-primary flow-transition">
-                                    Create New Account
-                                </p>
-                                <p className="text-xs text-flow-muted">
-                                    Set up your own profile with custom cycle data
-                                </p>
-                            </div>
-                            <ArrowRight className="w-4 h-4 text-flow-muted group-hover:text-flow-primary flow-transition" />
-                        </div>
-                    </Card>
-                </Link>
             </motion.div>
 
             {/* Trust badges */}

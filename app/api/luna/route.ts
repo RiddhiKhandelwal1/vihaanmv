@@ -50,8 +50,15 @@ export async function POST(req: NextRequest) {
         // ─── Call OpenAI API ────────────────────────────────────────────
         const apiKey = process.env.OPENAI_API_KEY;
         if (!apiKey || apiKey.trim().length < 10) {
+            const mockResponses = [
+                "That's a great question! While I'm in demo mode, I can tell you that staying hydrated and getting enough sleep are key.",
+                "I hear you. Many people experience that. Tracking these symptoms can really help identify patterns over time.",
+                "I'm operating in demo mode right now, but it sounds like you're doing a great job listening to your body! 🌸"
+            ];
+            const randomMock = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+            
             return NextResponse.json(
-                { response: "Luna is being set up — the API key hasn't been configured yet. 🌙" },
+                { response: randomMock },
                 { status: 200 }
             );
         }

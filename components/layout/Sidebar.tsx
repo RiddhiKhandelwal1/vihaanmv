@@ -12,6 +12,8 @@ import {
     User,
     Sparkles,
     Heart,
+    BookOpen,
+    FileText,
 } from 'lucide-react';
 
 const navItems = [
@@ -19,6 +21,7 @@ const navItems = [
     { href: '/calendar', label: 'Calendar', icon: Calendar },
     { href: '/log', label: 'Log', icon: PlusCircle, isAction: true },
     { href: '/insights', label: 'Insights', icon: BarChart3 },
+    { href: '/report', label: 'Report', icon: FileText },
     { href: '/profile', label: 'Profile', icon: User },
 ];
 
@@ -83,6 +86,20 @@ export function Sidebar() {
                 >
                     <Sparkles className="w-5 h-5 text-flow-warning" />
                     <span>Chat with Luna</span>
+                </Link>
+            </div>
+
+            {/* Learn link */}
+            <div className="px-3 pb-1">
+                <Link
+                    href="/learn"
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium flow-transition ${pathname === '/learn'
+                        ? 'text-flow-text bg-flow-surface2'
+                        : 'text-flow-muted hover:text-flow-text hover:bg-flow-surface2/60'
+                        }`}
+                >
+                    <BookOpen className="w-5 h-5 text-flow-primary" />
+                    <span>Let's Learn</span>
                 </Link>
             </div>
 

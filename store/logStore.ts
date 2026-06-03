@@ -19,12 +19,13 @@ export const useLogStore = create<LogState>()(
     persist(
         (set, get) => ({
             logs: [],
-            addLog: (log) =>
+            addLog: (log) => {
                 set((state) => {
                     // Replace if same date exists
                     const filtered = state.logs.filter((l) => l.date !== log.date);
                     return { logs: [...filtered, log].sort((a, b) => a.date.localeCompare(b.date)) };
-                }),
+                });
+            },
             updateLog: (id, data) =>
                 set((state) => ({
                     logs: state.logs.map((l) =>

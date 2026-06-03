@@ -9,6 +9,9 @@ import { useLogStore } from '@/store/logStore';
 import { useRouter } from 'next/navigation';
 import { generateDoctorReport } from '@/lib/generateReport';
 import { generateDemoData } from '@/lib/demoData';
+import { useMilestoneStore } from '@/store/milestoneStore';
+import { MILESTONES } from '@/lib/milestones';
+import * as Icons from 'lucide-react';
 import {
     User,
     Settings,
@@ -31,6 +34,7 @@ export default function ProfilePage() {
     const { profile, reset: resetUser, setAuthenticated } = useUserStore();
     const cycles = useCycleStore((s) => s.cycles);
     const logs = useLogStore((s) => s.logs);
+    const { unlockedMilestones, unlockMilestone } = useMilestoneStore();
     const router = useRouter();
     const [demoLoaded, setDemoLoaded] = useState(false);
 
@@ -73,6 +77,7 @@ export default function ProfilePage() {
         const { cycles, logs } = generateDemoData();
         useCycleStore.setState({ cycles });
         useLogStore.setState({ logs });
+        
         setDemoLoaded(true);
         setTimeout(() => setDemoLoaded(false), 3000);
     };
@@ -163,7 +168,7 @@ export default function ProfilePage() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <Card className="p-4 rounded-2xl bg-gradient-to-r from-flow-primary to-flow-accent border-0 text-white">
+                    <Card className="p-4 rounded-2xl bg-gradient-to-r from-flow-primary to-flow-accent border-0 text-white shadow-md">
                         <div className="flex items-center gap-3">
                             <Crown className="w-8 h-8 flex-shrink-0" />
                             <div className="flex-1">
@@ -186,6 +191,56 @@ export default function ProfilePage() {
                     </Card>
                 </motion.div>
             )}
+
+            {/* Milestones */}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.12 }}
+            >
+                <div className="flex items-center justify-between px-1 mb-2">
+                    <p className="text-xs text-flow-muted uppercase tracking-wide font-medium">
+                        Your Milestones
+                    </p>
+                    <p className="text-xs text-flow-primary font-medium bg-flow-primary/10 px-2 py-0.5 rounded-full">
+                        {Object.keys(unlockedMilestones).length} / {MILESTONES.length}
+                    </p>
+                </div>
+                <Card className="p-4 rounded-2xl border-[#ECDDD7]/50 bg-white shadow-sm overflow-hidden">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {MILESTONES.map((milestone) => {
+                            const earnedDate = unlockedMilestones[milestone.id];
+                            const isEarned = !!earnedDate;
+                            // @ts-ignore - Dynamic icon
+                            const IconComponent = Icons[milestone.icon] || Icons.Star;
+                            
+                            return (
+                                <div 
+                                    key={milestone.id} 
+                                    className={`flex flex-col items-center p-3 rounded-2xl border transition-all ${
+                                        isEarned 
+                                        ? 'bg-flow-surface2/30 border-flow-primary/20' 
+                                        : 'bg-flow-bg/30 border-transparent opacity-50 grayscale'
+                                    }`}
+                                >
+                                    <div 
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center mb-2 shadow-sm"
+                                        style={{ backgroundColor: isEarned ? milestone.color : '#D1C8D4' }}
+                                    >
+                                        <IconComponent className="w-5 h-5 text-white" strokeWidth={1.5} />
+                                    </div>
+                                    <p className={`text-[10px] font-bold text-center mb-1 leading-tight ${isEarned ? 'text-flow-text' : 'text-flow-muted'}`}>
+                                        {milestone.title}
+                                    </p>
+                                    <p className="text-[9px] text-center text-flow-muted">
+                                        {isEarned ? new Date(earnedDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Locked'}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Card>
+            </motion.div>
 
             {/* Settings groups */}
             {settingsGroups.map((group, gi) => (

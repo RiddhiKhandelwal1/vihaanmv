@@ -4,11 +4,20 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { TopBar } from '@/components/layout/TopBar';
 import { DemoBanner } from '@/components/ui/DemoBanner';
+import { CelebrationModal } from '@/components/ui/CelebrationModal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+import { useMilestoneStore } from '@/store/milestoneStore';
+import { checkMilestones } from '@/lib/milestones';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+
+    useEffect(() => {
+        useMilestoneStore.getState().incrementAppOpen();
+        setTimeout(() => checkMilestones(), 500);
+    }, []);
 
     return (
         <div className="min-h-screen bg-flow-bg">
@@ -30,6 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </AnimatePresence>
             </div>
             <MobileNav />
+            <CelebrationModal />
         </div>
     );
 }

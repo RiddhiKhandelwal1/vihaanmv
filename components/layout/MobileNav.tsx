@@ -3,13 +3,15 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Home, Calendar, Plus, BarChart3, User } from 'lucide-react';
+import { Home, Calendar, Plus, BarChart3, User, BookOpen, FileText } from 'lucide-react';
 
 const navItems = [
     { href: '/home', label: 'Home', icon: Home },
     { href: '/calendar', label: 'Calendar', icon: Calendar },
     { href: '/log', label: 'Log', icon: Plus, isAction: true },
+    { href: '/learn', label: 'Learn', icon: BookOpen },
     { href: '/insights', label: 'Insights', icon: BarChart3 },
+    { href: '/report', label: 'Report', icon: FileText },
     { href: '/profile', label: 'Profile', icon: User },
 ];
 
